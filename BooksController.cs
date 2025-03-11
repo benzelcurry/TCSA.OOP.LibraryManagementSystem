@@ -2,7 +2,7 @@
 
 namespace TCSA.OOP.LibraryManagementSystem
 {
-    internal static class BooksController
+    internal class BooksController
     {
         //private static List<string> books = new()
         //{
@@ -28,7 +28,7 @@ namespace TCSA.OOP.LibraryManagementSystem
         //    "The Hitchhiker's Guide to the Galaxy"
         //};
 
-        internal static void ViewBooks()
+        internal void ViewBooks()
         {
             AnsiConsole.MarkupLine("[yellow]List of Books:[/]");
 
@@ -41,7 +41,7 @@ namespace TCSA.OOP.LibraryManagementSystem
             Console.ReadKey();
         }
 
-        internal static void AddBook()
+        internal void AddBook()
         {
             string? title = AnsiConsole.Ask<string>("Enter the [green]title[/] of the book you'd like to add:");
 
@@ -59,7 +59,7 @@ namespace TCSA.OOP.LibraryManagementSystem
             Console.ReadKey();
         }
 
-        internal static void DeleteBook()
+        internal void DeleteBook()
         {
             if (books.Count == 0)
             {

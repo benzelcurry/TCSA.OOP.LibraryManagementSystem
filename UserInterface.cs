@@ -5,7 +5,8 @@ namespace TCSA.OOP.LibraryManagementSystem
 {
     internal class UserInterface
     {
-        internal static void MainMenu()
+        private readonly BooksController booksController = new();
+        internal void MainMenu()
         {
             while (true)
             {
@@ -19,16 +20,18 @@ namespace TCSA.OOP.LibraryManagementSystem
                 switch (choice)
                 {
                     case MenuOption.ViewBooks:
-                        BooksController.ViewBooks();
+                        booksController.ViewBooks();
                         break;
                     case MenuOption.AddBook:
-                        BooksController.AddBook();
+                        booksController.AddBook();
                         break;
                     case MenuOption.DeleteBook:
-                        BooksController.DeleteBook();
+                        booksController.DeleteBook();
                         break;
                 }
             }
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using TCSA.OOP.LibraryManagementSystem.Models;
 
 namespace TCSA.OOP.LibraryManagementSystem
 {
@@ -7,40 +8,61 @@ namespace TCSA.OOP.LibraryManagementSystem
 
         internal void ViewBooks()
         {
-            AnsiConsole.MarkupLine("[yellow]List of Books:[/]");
+            Table table = new();
+            table.Border(TableBorder.Rounded);
 
-            foreach (Book book in MockDatabase.Books)
+            table.AddColumn("[yellow]ID[/]");
+            table.AddColumn("[yellow]Title[/]");
+            table.AddColumn("[yellow]Author[/]");
+            table.AddColumn("[yellow]Category[/]");
+            table.AddColumn("[yellow]Location[/]");
+            table.AddColumn("[yellow]Pages[/]");
+
+            var books = MockDatabase.LibraryItems.OfType<Book>();
+
+            foreach (var book in books)
             {
-                AnsiConsole.MarkupLine($"- [cyan]{book.Name}[/]");
+                table.AddRow(
+                    book.Id.ToString(),
+                    $"[cyan]{book.Name}[/]",
+                    $"[cyan]{book.Author}[/]",
+                    $"[green]{book.Category}[/]",
+                    $"[blue]{book.Location}[/]",
+                    book.Pages.ToString()
+                    );
             }
 
-            AnsiConsole.MarkupLine("Press any key to continue.");
+            AnsiConsole.Write(table);
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
 
         internal void AddBook()
         {
-            string? title = AnsiConsole.Ask<string>("Enter the [green]title[/] of the book you'd like to add:");
-            int pages = AnsiConsole.Ask<int>("Enter the [green]number of pages[/] the book contains:");
+            string? title = AnsiConsole.Ask<string>("Enter the [green]title[/] of the book to add:");
+            string? author = AnsiConsole.Ask<string>("Enter the [green]author[/] of the book:");
+            string? category = AnsiConsole.Ask<string>("Enter the [green]category[/] of the book:");
+            string? location = AnsiConsole.Ask<string>("Enter the [green]location[/] of the book:");
+            int pages = AnsiConsole.Ask<int>("Enter the [green]number of pages[/] in the book:");
 
-            if (MockDatabase.Books.Exists(book => book.Name.Equals(title, StringComparison.OrdinalIgnoreCase)))
+            if (MockDatabase.LibraryItems.OfType<Book>().Any(b => b.Name.Equals(title, StringComparison.OrdinalIgnoreCase)))
             {
                 AnsiConsole.MarkupLine("[red]This book already exists.[/]");
             }
             else
             {
-                Book newBook = new(title, pages);
-                MockDatabase.Books.Add(newBook);
+                Book newBook = new(MockDatabase.LibraryItems.Count + 1, title, author, category, location, pages);
+                MockDatabase.LibraryItems.Add(newBook);
                 AnsiConsole.MarkupLine("[green]Book added successfully![/]");
             }
 
-            AnsiConsole.MarkupLine("Press any key to continue.");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
 
         internal void DeleteBook()
         {
-            if (MockDatabase.Books.Count == 0)
+            if (MockDatabase.LibraryItems.OfType<Book>().Count() == 0)
             {
                 AnsiConsole.MarkupLine("[red]No books available to delete.[/]");
                 Console.ReadKey();
@@ -51,9 +73,9 @@ namespace TCSA.OOP.LibraryManagementSystem
                 new SelectionPrompt<Book>()
                 .Title("Select a [red]book[/] to delete:")
                 .UseConverter(book => $"{book.Name}")
-                .AddChoices(MockDatabase.Books));
+                .AddChoices(MockDatabase.LibraryItems.OfType<Book>()));
 
-            if (MockDatabase.Books.Remove(bookToDelete))
+            if (MockDatabase.LibraryItems.Remove(bookToDelete))
             {
                 AnsiConsole.MarkupLine("[red]Book deleted successfully![/]");
             }

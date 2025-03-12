@@ -4,37 +4,14 @@ namespace TCSA.OOP.LibraryManagementSystem
 {
     internal class BooksController
     {
-        //private static List<string> books = new()
-        //{
-        //    "The Great Gatsby",
-        //    "To Kill a Mockingbird",
-        //    "1984",
-        //    "Pride and Prejudice",
-        //    "The Catcher in the Rye",
-        //    "The Hobbit",
-        //    "Moby-Dick",
-        //    "War and Peace",
-        //    "The Odyssey",
-        //    "The Lord of the Rings",
-        //    "Jane Eyre",
-        //    "Animal Farm",
-        //    "Brave New World",
-        //    "The Chronicles of Narnia",
-        //    "The Diary of a Young Girl",
-        //    "The Alchemist",
-        //    "Wuthering Heights",
-        //    "Fahrenheit 451",
-        //    "Catch-22",
-        //    "The Hitchhiker's Guide to the Galaxy"
-        //};
 
         internal void ViewBooks()
         {
             AnsiConsole.MarkupLine("[yellow]List of Books:[/]");
 
-            foreach (string book in MockDatabase.Books)
+            foreach (Book book in MockDatabase.Books)
             {
-                AnsiConsole.MarkupLine($"- [cyan]{book}[/]");
+                AnsiConsole.MarkupLine($"- [cyan]{book.Name}[/]");
             }
 
             AnsiConsole.MarkupLine("Press any key to continue.");
@@ -44,14 +21,16 @@ namespace TCSA.OOP.LibraryManagementSystem
         internal void AddBook()
         {
             string? title = AnsiConsole.Ask<string>("Enter the [green]title[/] of the book you'd like to add:");
+            int pages = AnsiConsole.Ask<int>("Enter the [green]number of pages[/] the book contains:");
 
-            if (books.Contains(title))
+            if (MockDatabase.Books.Exists(book => book.Name.Equals(title, StringComparison.OrdinalIgnoreCase)))
             {
                 AnsiConsole.MarkupLine("[red]This book already exists.[/]");
             }
             else
             {
-                books.Add(title);
+                Book newBook = new(title, pages);
+                MockDatabase.Books.Add(newBook);
                 AnsiConsole.MarkupLine("[green]Book added successfully![/]");
             }
 
@@ -61,7 +40,7 @@ namespace TCSA.OOP.LibraryManagementSystem
 
         internal void DeleteBook()
         {
-            if (books.Count == 0)
+            if (MockDatabase.Books.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]No books available to delete.[/]");
                 Console.ReadKey();
@@ -69,11 +48,12 @@ namespace TCSA.OOP.LibraryManagementSystem
             }
 
             var bookToDelete = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
+                new SelectionPrompt<Book>()
                 .Title("Select a [red]book[/] to delete:")
-                .AddChoices(books));
+                .UseConverter(book => $"{book.Name}")
+                .AddChoices(MockDatabase.Books));
 
-            if (books.Remove(bookToDelete))
+            if (MockDatabase.Books.Remove(bookToDelete))
             {
                 AnsiConsole.MarkupLine("[red]Book deleted successfully![/]");
             }

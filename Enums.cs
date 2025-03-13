@@ -4,9 +4,16 @@
     {
         internal enum MenuOption
         {
-            ViewBooks,
-            AddBook,
-            DeleteBook
+            ViewItems,
+            AddItem,
+            DeleteItem
+        }
+
+        internal enum ItemType
+        {
+            Book,
+            Magazine,
+            Newspaper
         }
     }
 }

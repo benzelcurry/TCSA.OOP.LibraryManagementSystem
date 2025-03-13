@@ -1,12 +1,12 @@
 ﻿using Spectre.Console;
 using TCSA.OOP.LibraryManagementSystem.Models;
 
-namespace TCSA.OOP.LibraryManagementSystem
+namespace TCSA.OOP.LibraryManagementSystem.Controllers
 {
-    internal class BooksController
+    internal class BooksController : IBaseController
     {
 
-        internal void ViewBooks()
+        public void ViewItems()
         {
             Table table = new();
             table.Border(TableBorder.Rounded);
@@ -37,7 +37,7 @@ namespace TCSA.OOP.LibraryManagementSystem
             Console.ReadKey();
         }
 
-        internal void AddBook()
+        public void AddItem()
         {
             string? title = AnsiConsole.Ask<string>("Enter the [green]title[/] of the book to add:");
             string? author = AnsiConsole.Ask<string>("Enter the [green]author[/] of the book:");
@@ -60,7 +60,7 @@ namespace TCSA.OOP.LibraryManagementSystem
             Console.ReadKey();
         }
 
-        internal void DeleteBook()
+        public void DeleteItem()
         {
             if (MockDatabase.LibraryItems.OfType<Book>().Count() == 0)
             {
